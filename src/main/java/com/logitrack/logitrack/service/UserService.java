@@ -45,12 +45,12 @@ public class UserService {
     // Update user
     public User updateUser(Long id, UserDTO userDTO) {
         User existingUser = userRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        UserMapper.updateUserFromDTO(userDTO, existingUser);
-//
-//        userRepository.save(existingUser);
-//        return "User updated successfully.";
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserMapper.updateUserFromDTO(userDTO, existingUser);
+
+        userRepository.save(existingUser);
+        return "User updated successfully.";
     }
 
 
