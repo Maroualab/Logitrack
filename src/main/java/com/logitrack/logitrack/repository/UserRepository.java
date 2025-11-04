@@ -1,7 +1,7 @@
 package com.logitrack.logitrack.repository;
 
 import com.logitrack.logitrack.model.User;
-import com.logitrack.logitrack.model.UserRole;
+import com.logitrack.logitrack.model.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

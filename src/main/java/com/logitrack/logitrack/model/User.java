@@ -1,10 +1,8 @@
 package com.logitrack.logitrack.model;
 
+import com.logitrack.logitrack.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
@@ -26,13 +24,7 @@ public class User {
     private String fullName;
     private Boolean active = true;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_managed_warehouses",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "warehouse_id")
-    )
-    private Set<Warehouse> managedWarehouses = new HashSet<>();
-
+    @OneToOne(mappedBy = "warehouseManager", fetch = FetchType.LAZY)
+    private Warehouse managedWarehouse;
     }
 

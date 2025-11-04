@@ -1,4 +1,4 @@
-package com.logitrack.logitrack.model;
+package com.logitrack.logitrack.model.enums;
 
 
 public enum UserRole {
