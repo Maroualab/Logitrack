@@ -32,14 +32,11 @@ public class InventoryMovement {
     @Column(nullable = false)
     private MovementType type;
 
-    /**
-     * La quantité de ce mouvement spécifique (ex: 50).
-     * Note: On stocke la quantité absolue. Le 'type' (IN/OUT) dit le sens.
-     */
+
     @Column(nullable = false)
     private int quantity;
 
-    @CreationTimestamp // Géré automatiquement par JPA
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime occurredAt;
 
@@ -47,5 +44,5 @@ public class InventoryMovement {
      * Référence au document qui a causé ce mouvement.
      * (ex: "PO-123", "SO-500", "AJUST-OCT25")
      */
-    private String referenceDocument;
+    //private String referenceDocument;
 }
