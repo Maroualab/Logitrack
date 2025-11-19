@@ -23,5 +23,5 @@ public class MovementRequestDTO {
     private MovementType type;
 
     // Optionnel, pour la traçabilité (ex: "PO-123" ou "SO-500")
-    // private String referenceDocument;
+     private String referenceDocument;
 }

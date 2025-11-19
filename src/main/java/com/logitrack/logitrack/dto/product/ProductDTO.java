@@ -15,6 +15,9 @@ public class ProductDTO {
 
     private Long id;
 
+    @NotBlank(message = "SKU cannot be blank")
+    private String sku;
+
     @NotBlank(message = "Name is required")
     private String name;
 

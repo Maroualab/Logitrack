@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # --- Service SonarQube ---
+  # Votre serveur d'analyse de code
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: logitrack_sonarqube
+    ports:
+      # Expose SonarQube sur http://localhost:9000
+      - "9000:9000"
+    volumes:
+      # Persiste la base de données, les plugins et les logs de Sonar
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    restart: unless-stopped
+    networks:
+      - logitrack-net
+
+  # --- Service Jenkins ---
+  # Votre serveur d'automatisation (CI/CD)
+  jenkins:
+    # Nous utilisons une image LTS qui inclut déjà le JDK 17 (pour votre projet)
+    image: jenkins/jenkins:lts-jdk17
+    container_name: logitrack_jenkins
+    ports:
+      # Expose Jenkins sur http://localhost:8080
+      - "8080:8080"
+      # Port pour la connexion des agents (si nécessaire)
+      - "50000:50000"
+    volumes:
+      # Persiste TOUTE la configuration de Jenkins (jobs, plugins, etc.)
+      - jenkins_home:/var/jenkins_home
+    user: jenkins # Bonnes pratiques
+    restart: unless-stopped
+    depends_on:
+      - sonarqube # Indique à Compose de démarrer SonarQube avant Jenkins
+    networks:
+      - logitrack-net
+
+# Définit les volumes persistants que nous avons déclarés
+volumes:
+  jenkins_home:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+
+# Définit le réseau partagé pour que les conteneurs puissent se parler
+networks:
+  logitrack-net:
+    driver: bridge

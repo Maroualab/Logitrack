@@ -22,8 +22,9 @@ public abstract class UserMapper {
     // Convert User Entity to UserResponseDTO
     public abstract UserResponseDTO toResponseDTO(User user);
 
-    // Convert UserDTO to User Entity (map plain password -> passwordHash)
-    @Mapping(target = "passwordHash", source = "password")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "managedWarehouse", ignore = true)
     public abstract User toEntity(UserDTO userDTO);
 
     // Update existing User entity with DTO data (ignore nulls)

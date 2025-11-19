@@ -11,13 +11,11 @@ import java.util.Optional;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
-    /**
-     * C'est LA méthode cruciale.
-     * Elle permet de trouver l'enregistrement de stock
-     * pour un produit dans un entrepôt spécifique.
-     */
+
+
+    Optional<Inventory> findByProduct_Sku( String sku);
+
     Optional<Inventory> findByProductIdAndWarehouseId(Long productId, Long warehouseId);
 
-    // Une surcharge utile si on a déjà les objets entiers
     Optional<Inventory> findByProductAndWarehouse(Product product, Warehouse warehouse);
 }
