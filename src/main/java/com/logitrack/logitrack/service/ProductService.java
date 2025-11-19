@@ -1,6 +1,8 @@
 package com.logitrack.logitrack.service;
 
 import com.logitrack.logitrack.dto.product.ProductDTO;
+import com.logitrack.logitrack.exception.BusinessException;
+import com.logitrack.logitrack.exception.ResourceNotFoundException;
 import com.logitrack.logitrack.mapper.ProductMapper;
 import com.logitrack.logitrack.model.Product;
 import com.logitrack.logitrack.repository.ProductRepository;
@@ -29,13 +31,13 @@ public class ProductService {
 
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         return productMapper.toDTO(product);
     }
 
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         productMapper.updateEntityFromDTO(productDTO, existingProduct);
         Product updatedProduct = productRepository.save(existingProduct);
         return productMapper.toDTO(updatedProduct);
@@ -43,7 +45,7 @@ public class ProductService {
 
     public void deactiveteProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         product.setActive(false);
         productRepository.save(product);
     }

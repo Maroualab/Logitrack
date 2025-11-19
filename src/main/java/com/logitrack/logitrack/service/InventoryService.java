@@ -2,6 +2,7 @@ package com.logitrack.logitrack.service;
 
 import com.logitrack.logitrack.exception.BusinessException;
 import com.logitrack.logitrack.exception.ResourceNotFoundException;
+import com.logitrack.logitrack.exception.StockUnavailableException;
 import com.logitrack.logitrack.dto.MovementRequestDTO;
 import com.logitrack.logitrack.model.Inventory;
 import com.logitrack.logitrack.model.InventoryMovement;
@@ -57,6 +58,8 @@ public class InventoryService {
 
         Inventory savedInventory = inventoryRepository.save(inventory);
 
+        // Log the movement
+        logMovement(product, warehouse, request.getType(), movementQuantity, request.getReferenceDocument());
 
         return savedInventory;
     }
@@ -76,7 +79,7 @@ public class InventoryService {
         int availableQuantity = inventory.getQtyOnHand() - inventory.getQtyReserved();
 
         if (availableQuantity < quantityToShip) {
-            throw new BusinessException("Stock unavailable for product " + inventory.getProduct().getSku()
+            throw new StockUnavailableException("Stock unavailable for product " + inventory.getProduct().getSku()
                     + ". Available: " + availableQuantity
                     + ", Requested: " + quantityToShip);
         }
@@ -94,12 +97,13 @@ public class InventoryService {
     }
 
 
-    private void logMovement(Product product, Warehouse warehouse, MovementType type, int quantity, String ref) {
+    private void logMovement(Product product, Warehouse warehouse, MovementType type, int quantity, String referenceDocument) {
         InventoryMovement movement = new InventoryMovement();
         movement.setProduct(product);
         movement.setWarehouse(warehouse);
         movement.setType(type);
         movement.setQuantity(quantity);
+        movement.setReferenceDocument(referenceDocument);
         movementRepository.save(movement);
     }
 }

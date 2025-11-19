@@ -44,5 +44,5 @@ public class InventoryMovement {
      * Référence au document qui a causé ce mouvement.
      * (ex: "PO-123", "SO-500", "AJUST-OCT25")
      */
-    //private String referenceDocument;
+    private String referenceDocument;
 }

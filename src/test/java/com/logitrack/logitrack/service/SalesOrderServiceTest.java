@@ -1,7 +1,10 @@
 package com.logitrack.logitrack.service;
 
+import com.logitrack.logitrack.dto.salesOrder.SalesOrderDTO;
 import com.logitrack.logitrack.exception.BusinessException;
 import com.logitrack.logitrack.exception.StockUnavailableException;
+import com.logitrack.logitrack.mapper.SalesOrderMapper;
+import com.logitrack.logitrack.mapper.SalesOrderLineMapper;
 import com.logitrack.logitrack.model.*;
 import com.logitrack.logitrack.model.enums.MovementType;
 import com.logitrack.logitrack.model.enums.SalesOrderStatus;
@@ -27,6 +30,10 @@ class SalesOrderServiceTest {
     private InventoryRepository inventoryRepository;
     @Mock
     private InventoryService inventoryService; // Le Moteur de Stock est mocké
+    @Mock
+    private SalesOrderMapper salesOrderMapper;
+    @Mock
+    private SalesOrderLineMapper salesOrderLineMapper;
 
     // Mocks pour la validation (ignorer les mappers pour la simplicité du test)
     @Mock
@@ -77,6 +84,7 @@ class SalesOrderServiceTest {
         when(inventoryRepository.findByProductAndWarehouse(any(Product.class), any(Warehouse.class)))
                 .thenReturn(Optional.of(inventory));
         when(salesOrderRepository.save(any(SalesOrder.class))).thenReturn(order);
+        when(salesOrderMapper.toDto(any(SalesOrder.class))).thenReturn(new SalesOrderDTO());
 
         // Act
         salesOrderService.reserveOrder(1L);
@@ -117,6 +125,8 @@ class SalesOrderServiceTest {
         when(salesOrderRepository.findById(1L)).thenReturn(Optional.of(order));
         when(inventoryRepository.findByProductAndWarehouse(any(Product.class), any(Warehouse.class)))
                 .thenReturn(Optional.of(inventory));
+        when(salesOrderRepository.save(any(SalesOrder.class))).thenReturn(order);
+        when(salesOrderMapper.toDto(any(SalesOrder.class))).thenReturn(new SalesOrderDTO());
 
         // Act
         salesOrderService.shipOrder(1L);

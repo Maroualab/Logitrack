@@ -2,6 +2,7 @@ package com.logitrack.logitrack.service;
 
 import com.logitrack.logitrack.exception.BusinessException;
 import com.logitrack.logitrack.exception.ResourceNotFoundException;
+import com.logitrack.logitrack.exception.StockUnavailableException;
 import com.logitrack.logitrack.mapper.SalesOrderMapper;
 import com.logitrack.logitrack.mapper.SalesOrderLineMapper;
 import com.logitrack.logitrack.dto.MovementRequestDTO;
@@ -77,7 +78,7 @@ public class SalesOrderService {
             int availableQty = inventory.getQtyOnHand() - inventory.getQtyReserved();
 
             if (availableQty < quantityToReserve) {
-                throw new BusinessException("Stock unavailable for " + product.getSku()
+                throw new StockUnavailableException("Stock unavailable for " + product.getSku()
                         + ". Available: " + availableQty + ", Requested: " + quantityToReserve);
             }
 

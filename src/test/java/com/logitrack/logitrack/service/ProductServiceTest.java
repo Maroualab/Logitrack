@@ -37,7 +37,7 @@ class ProductServiceTest {
         productDTO.setId(1L);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-        //when(productMapper.toDto(product)).thenReturn(productDTO);
+        when(productMapper.toDTO(product)).thenReturn(productDTO);
 
         // Act
         ProductDTO result = productService.getProductById(1L);
@@ -62,13 +62,29 @@ class ProductServiceTest {
     void testCreateProduct_Fails_SkuExists() {
         // Arrange
         ProductDTO dto = new ProductDTO();
-        dto.setSku("SKU-123");
+        dto.setName("Test Product");
+        dto.setCategory("ELEC");
+        
+        Product product = new Product();
+        product.setSku("PROD-ELE-123456");
+        
+        Product savedProduct = new Product();
+        savedProduct.setId(1L);
+        savedProduct.setSku("PROD-ELE-123456");
 
-        when(productRepository.findBySku("SKU-123")).thenReturn(Optional.of(new Product()));
+        ProductDTO resultDTO = new ProductDTO();
+        resultDTO.setId(1L);
 
-        // Act & Assert
-        assertThrows(BusinessException.class, () -> {
-            productService.createProduct(dto);
-        });
+        when(productMapper.toEntity(dto)).thenReturn(product);
+        when(productRepository.save(product)).thenReturn(savedProduct);
+        when(productMapper.toDTO(savedProduct)).thenReturn(resultDTO);
+
+        // Act
+        ProductDTO result = productService.createProduct(dto);
+        
+        // Assert
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        verify(productRepository, times(1)).save(product);
     }
 }

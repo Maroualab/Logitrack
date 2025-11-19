@@ -53,11 +53,14 @@ class WarehouseServiceTest {
     @Test
     void testCreateWarehouse_Success() {
         // Arrange
+        Warehouse warehouse = new Warehouse();
+        warehouse.setCode("PARIS");
+        warehouse.setName("Entrepôt Paris");
+        
         when(warehouseRepository.findByCode("PARIS")).thenReturn(Optional.empty());
         when(userRepository.findById(1L)).thenReturn(Optional.of(warehouseManager));
-
-        // Simuler les mappers (ignorer pour ce test)
-        when(warehouseMapper.toEntity(any(WarehouseDTO.class))).thenReturn(new Warehouse());
+        when(warehouseMapper.toEntity(any(WarehouseDTO.class))).thenReturn(warehouse);
+        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(warehouse);
         when(warehouseMapper.toDto(any(Warehouse.class))).thenReturn(warehouseDTO);
 
         // Act
