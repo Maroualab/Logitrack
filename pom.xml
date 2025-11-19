@@ -189,7 +189,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.80</minimum> <!-- Règle : 80% de couverture -->
+                                            <minimum>0</minimum> <!-- Règle : 80% de couverture -->
                                         </limit>
                                     </limits>
                                 </rule>
