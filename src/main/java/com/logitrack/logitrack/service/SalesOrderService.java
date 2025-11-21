@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class SalesOrderService {
@@ -130,4 +133,12 @@ public class SalesOrderService {
         SalesOrder savedOrder = salesOrderRepository.save(order);
         return salesOrderMapper.toDto(savedOrder);
     }
+
+    public List<SalesOrderDTO> AllReservedSalesOrders(){
+        List<SalesOrder> reservedSalesOrders = salesOrderRepository.findAllByStatus(SalesOrderStatus.RESERVED);
+
+        return reservedSalesOrders.stream().map(salesOrderMapper::toDto).toList();
+
+}
+
 }

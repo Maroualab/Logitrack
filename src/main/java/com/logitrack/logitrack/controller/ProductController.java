@@ -40,10 +40,17 @@ public class ProductController
         return "Product updated with id: " + id;
     }
 
-    @PatchMapping("/deactivate/{id}")
-    public String deactivateProduct(@PathVariable Long id){
-        productService.deactiveteProduct(id);
-        return "Product deactivated with id: " + id;
+//    @PatchMapping("/deactivate/{id}")
+//    public String deactivateProduct(@PathVariable Long id){
+//        productService.deactiveteProduct(id);
+//        return "Product deactivated with id: " + id;
+//    }
+
+    @PatchMapping("/{sku}/deactivate")
+    public String deactivateProduct(@PathVariable String sku){
+
+        productService.deactivateProduct(sku);
+        return "Product deactivated with SKU: " + sku;
     }
 
 

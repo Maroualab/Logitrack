@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/purchase-orders")
@@ -27,6 +28,7 @@ public class PurchaseOrderController {
     }
 
 
+
     @PostMapping("/lines/{poLineId}/receive")
     public ResponseEntity<InventoryDTO> receiveItems(
             @PathVariable Long poLineId,
@@ -34,11 +36,22 @@ public class PurchaseOrderController {
 
         InventoryDTO updatedInventory = purchaseOrderService.receiveItems(
                 poLineId,
-                receiveDTO.getWarehouseId(),
-                receiveDTO.getQuantityToReceive()
+                receiveDTO.getWarehouseId()
         );
 
         return ResponseEntity.ok(updatedInventory);
+    }
+
+    @PutMapping("/{purchaseOrderId}/cancel")
+    public ResponseEntity<PurchaseOrderDTO> cancelPurchaseOrder(@PathVariable Long purchaseOrderId) {
+        PurchaseOrderDTO canceledPO = purchaseOrderService.cancelPurchaseOrder(purchaseOrderId);
+        return ResponseEntity.ok(canceledPO);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<PurchaseOrderDTO>> getAllPurchaseOrders() {
+        List<PurchaseOrderDTO> purchaseOrders = purchaseOrderService.getAllPurchaseOrders();
+        return ResponseEntity.ok(purchaseOrders);
     }
 
     

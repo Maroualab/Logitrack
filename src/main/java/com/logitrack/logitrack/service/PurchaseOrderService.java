@@ -62,8 +62,10 @@ public class PurchaseOrderService {
     }
 
 
+
+
     @Transactional
-    public InventoryDTO receiveItems(Long poLineId, Long warehouseId, int quantityToReceive) {
+    public InventoryDTO receiveItems(Long poLineId, Long warehouseId) {
 
         PurchaseOrderLine poLine = purchaseOrderLineRepository.findById(poLineId)
                 .orElseThrow(() -> new ResourceNotFoundException("PurchaseOrderLine not found with id: " + poLineId));
@@ -77,22 +79,22 @@ public class PurchaseOrderService {
         }
 
         int remainingQuantity = poLine.getQuantity() - poLine.getQuantityReceived();
-        if (quantityToReceive > remainingQuantity) {
-            throw new BusinessException("Cannot receive " + quantityToReceive + " items. "
-                    + "Only " + remainingQuantity + " items are remaining on this line.");
+        
+        if (remainingQuantity <= 0) {
+            throw new BusinessException("All items from this PO line have already been received.");
         }
 
 
         MovementRequestDTO movementRequest = new MovementRequestDTO();
         movementRequest.setProductId(poLine.getProduct().getId());
         movementRequest.setWarehouseId(warehouseId);
-        movementRequest.setQuantity(quantityToReceive);
+        movementRequest.setQuantity(remainingQuantity);
         movementRequest.setType(MovementType.INBOUND);
         movementRequest.setReferenceDocument("PO-" + purchaseOrder.getId());
 
         Inventory updatedInventory = inventoryService.handleStockMovement(movementRequest);
 
-        poLine.setQuantityReceived(poLine.getQuantityReceived() + quantityToReceive);
+        poLine.setQuantityReceived(poLine.getQuantityReceived() + remainingQuantity);
         purchaseOrderLineRepository.save(poLine);
 
         checkAndUpdatePOStatus(purchaseOrder);
@@ -110,6 +112,36 @@ public class PurchaseOrderService {
             purchaseOrder.setStatus(PurchaseOrderStatus.RECEIVED);
             purchaseOrderRepository.save(purchaseOrder);
         }
+    }
+
+
+
+    @Transactional(readOnly = true)
+    public List<PurchaseOrderDTO> getAllPurchaseOrders() {
+        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
+        return purchaseOrders.stream()
+                .map(purchaseOrderMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public PurchaseOrderDTO cancelPurchaseOrder(Long purchaseOrderId) {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
+                .orElseThrow(() -> new ResourceNotFoundException("PurchaseOrder not found with id: " + purchaseOrderId));
+
+        if (purchaseOrder.getStatus() == PurchaseOrderStatus.RECEIVED) {
+            throw new BusinessException("Cannot cancel a purchase order that has been fully received.");
+        }
+
+        if (purchaseOrder.getStatus() == PurchaseOrderStatus.CANCELED) {
+            throw new BusinessException("This purchase order is already canceled.");
+        }
+
+        purchaseOrder.setStatus(PurchaseOrderStatus.CANCELED);
+        PurchaseOrder savedPurchaseOrder = purchaseOrderRepository.save(purchaseOrder);
+
+        return purchaseOrderMapper.toDto(savedPurchaseOrder);
     }
 
 }

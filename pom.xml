@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Development Tools -->
@@ -154,19 +154,18 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin JaCoCo pour la couverture de code -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
                 <configuration>
                     <excludes>
-                        <!-- Exclure les classes non pertinentes de la couverture (Règle 4) -->
-                        <exclude>**/model/dto/*</exclude>
-                        <exclude>**/mapper/*</exclude>
-                        <exclude>**/model/enums/*</exclude>
+                        <exclude>**/dto/**</exclude>
+                        <exclude>**/mapper/**</exclude>
+                        <exclude>**/enums/**</exclude>
+                        <exclude>**/config/**</exclude>
                         <exclude>**/LogiTrackApplication.class</exclude>
-                        <exclude>**/exception/*</exclude>
+                        <exclude>**/exception/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -196,7 +195,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0</minimum> <!-- Règle : 80% de couverture -->
+                                            <minimum>0.80</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

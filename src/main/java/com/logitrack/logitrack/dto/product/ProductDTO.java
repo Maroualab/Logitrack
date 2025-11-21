@@ -15,7 +15,6 @@ public class ProductDTO {
 
     private Long id;
 
-    @NotBlank(message = "SKU cannot be blank")
     private String sku;
 
     @NotBlank(message = "Name is required")
@@ -24,11 +23,6 @@ public class ProductDTO {
     @NotBlank(message = "Category is required")
     @Size(max = 30, message = "Category must be at most 30 characters")
     private String category;
-    
-
-    @PositiveOrZero(message = "Original Unit Price must be zero or positive")
-    private BigDecimal ogUnitPrice;
-
 
     private Boolean active = true;
 

@@ -64,7 +64,6 @@ class PurchaseOrderServiceTest {
     void testReceiveItems_Success() {
         // Arrange (US14)
         Long warehouseId = 1L;
-        int quantityToReceive = 50;
 
         when(purchaseOrderLineRepository.findById(10L)).thenReturn(Optional.of(poLine));
         // Simuler le check du statut (tout est reçu)
@@ -74,38 +73,38 @@ class PurchaseOrderServiceTest {
         when(inventoryService.handleStockMovement(any(MovementRequestDTO.class))).thenReturn(updatedInventory);
         when(inventoryMapper.toDto(updatedInventory)).thenReturn(new InventoryDTO());
 
-        // Act
-        InventoryDTO result = purchaseOrderService.receiveItems(10L, warehouseId, quantityToReceive);
+        // Act - Now automatically receives ALL remaining quantity (100)
+        InventoryDTO result = purchaseOrderService.receiveItems(10L, warehouseId);
 
         // Assert
         assertNotNull(result);
-        // 1. Vérifie que la quantité reçue sur la ligne a été mise à jour
-        assertEquals(50, poLine.getQuantityReceived());
+        // 1. Vérifie que la quantité reçue sur la ligne a été mise à jour (ALL remaining = 100)
+        assertEquals(100, poLine.getQuantityReceived());
         // 2. Vérifie que le moteur de stock a été appelé avec les bonnes infos
         verify(inventoryService).handleStockMovement(argThat(req ->
                 req.getType() == MovementType.INBOUND &&
-                        req.getQuantity() == 50 &&
+                        req.getQuantity() == 100 &&
                         req.getWarehouseId() == warehouseId &&
                         req.getReferenceDocument().equals("PO-1")
         ));
-        // 3. Le statut ne doit PAS changer (réception partielle)
-        assertEquals(PurchaseOrderStatus.APPROVED, purchaseOrder.getStatus());
+        // 3. Le statut devrait changer à RECEIVED car tout a été reçu
+        verify(purchaseOrderRepository).save(purchaseOrder);
     }
 
     @Test
-    void testReceiveItems_Fails_QuantityTooHigh() {
-        // Arrange (US14)
+    void testReceiveItems_Fails_AlreadyReceived() {
+        // Arrange - All items already received
         Long warehouseId = 1L;
-        int quantityToReceive = 110; // Tente de recevoir 110, mais 100 commandés
+        poLine.setQuantityReceived(100); // Already received all 100 items
 
         when(purchaseOrderLineRepository.findById(10L)).thenReturn(Optional.of(poLine));
 
         // Act & Assert
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            purchaseOrderService.receiveItems(10L, warehouseId, quantityToReceive);
+            purchaseOrderService.receiveItems(10L, warehouseId);
         });
 
-        assertTrue(ex.getMessage().contains("Cannot receive 110 items"));
+        assertTrue(ex.getMessage().contains("All items from this PO line have already been received"));
         verify(inventoryService, never()).handleStockMovement(any());
     }
 }

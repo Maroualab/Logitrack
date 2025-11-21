@@ -13,8 +13,4 @@ public class PurchaseReceiveDTO {
 
     @NotNull(message = "Warehouse ID (where items are received) cannot be null")
     private Long warehouseId;
-
-    @NotNull(message = "Quantity to receive cannot be null")
-    @Min(value = 1, message = "Quantity to receive must be at least 1")
-    private int quantityToReceive;
 }

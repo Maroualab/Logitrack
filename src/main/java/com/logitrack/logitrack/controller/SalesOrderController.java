@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/sales-orders")
 @RequiredArgsConstructor
@@ -36,5 +38,12 @@ public class SalesOrderController {
         SalesOrderDTO shippedOrder = salesOrderService.shipOrder(id);
         return ResponseEntity.ok(shippedOrder);
     }
+
+    @GetMapping("/reservedSalesOrder")
+    public ResponseEntity<List<SalesOrderDTO>> getReservedSalesOrder() {
+        List<SalesOrderDTO> reservedSalesOrders = salesOrderService.AllReservedSalesOrders();
+        return ResponseEntity.ok(reservedSalesOrders);
+    }
+
 
 }

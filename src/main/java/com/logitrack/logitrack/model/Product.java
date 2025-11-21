@@ -18,7 +18,6 @@ public class Product {
 
     private String name;
     private String category;
-    private BigDecimal ogUnitPrice;
     private Boolean active = true;
 
 

@@ -6,11 +6,13 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "warehouses")
-@Getter // Ajoute tous les getters
-@Setter // Ajoute tous les setters
-@NoArgsConstructor // Ajoute le constructeur sans argument (requis par JPA)
+@Getter
+@Setter
+@NoArgsConstructor
 public class Warehouse {
 
     @Id
@@ -28,6 +30,15 @@ public class Warehouse {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_manager_user_id", referencedColumnName = "id")
     private User warehouseManager;
+
+
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "warehouse_id", nullable = false)
+//    private Warehouse warehouse;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse")
+    private List<Inventory> inventory;
+
 
     @PrePersist
     public void generateCode() {

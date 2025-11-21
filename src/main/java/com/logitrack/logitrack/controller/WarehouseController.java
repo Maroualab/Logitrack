@@ -43,9 +43,21 @@ public class WarehouseController {
         return ResponseEntity.ok(updatedWarehouse);
     }
 
+    @PostMapping("/{code}")
+    public ResponseEntity<WarehouseDTO> findWarehouse(@PathVariable String code){
+        WarehouseDTO warehouseDTO = warehouseService.getWarehouseByCode(code);
+        return ResponseEntity.ok(warehouseDTO);
+    }
+
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<WarehouseDTO> deactivateWarehouse(@PathVariable Long id) {
         WarehouseDTO deactivatedWarehouse = warehouseService.deactivateWarehouse(id);
         return ResponseEntity.ok(deactivatedWarehouse);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWarehouse(@PathVariable Long id) {
+        warehouseService.deleteWarehouse(id);
+        return ResponseEntity.noContent().build();
     }
 }

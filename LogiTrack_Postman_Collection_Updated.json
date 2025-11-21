@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "logitrack-api-collection-v2",
+		"name": "LogiTrack API - Complete Collection v2",
+		"description": "Complete API testing collection for LogiTrack project with all endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8081",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullName\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"ADMIN\",\n  \"active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Users Management",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/all",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "all"]
+						}
+					}
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullName\": \"John Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"role\": \"ADMIN\",\n  \"active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "1"]
+						},
+						"description": "Delete a user by ID"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Products Management",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Laptop Dell XPS 15\",\n  \"category\": \"ELECTRONICS\",\n  \"active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/create",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "create"]
+						}
+					}
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/all",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "all"]
+						}
+					}
+				},
+				{
+					"name": "Get Product By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Laptop Dell XPS 15 Updated\",\n  \"category\": \"ELECTRONICS\",\n  \"active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Deactivate Product by SKU",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/PROD-ELE-123456/deactivate",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "PROD-ELE-123456", "deactivate"]
+						},
+						"description": "Deactivate a product by SKU. Will fail if:\n- Product has active orders (CREATED/RESERVED)\n- Product has reserved stock\n- Product is already deactivated"
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Warehouses Management",
+			"item": [
+				{
+					"name": "Create Warehouse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Main Warehouse Paris\",\n  \"active\": true,\n  \"warehouseManagerId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/warehouses/create",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "warehouses", "create"]
+						},
+						"description": "Code will be auto-generated (e.g., WH-MAI-123456)"
+					}
+				},
+				{
+					"name": "Get All Warehouses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/warehouses/all",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "warehouses", "all"]
+						}
+					}
+				},
+				{
+					"name": "Get Warehouse By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/warehouses/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "warehouses", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Warehouse",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Main Warehouse Paris Updated\",\n  \"active\": true,\n  \"warehouseManagerId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/warehouses/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "warehouses", "1"]
+						}
+					}
+				},
+				{
+					"name": "Deactivate Warehouse",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/warehouses/1/deactivate",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "warehouses", "1", "deactivate"]
+						},
+						"description": "Deactivate a warehouse (sets active=false)"
+					}
+				},
+				{
+					"name": "Delete Warehouse (NEW)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/warehouses/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "warehouses", "1"]
+						},
+						"description": "Delete a warehouse permanently. Will fail if:\n- Warehouse contains physical stock (qtyOnHand > 0)\n- Warehouse has active orders (CREATED/RESERVED)\n\nReturns:\n- 204 No Content: Success\n- 404 Not Found: Warehouse doesn't exist\n- 409 Conflict: Cannot delete due to business rules"
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Suppliers Management",
+			"item": [
+				{
+					"name": "Create Supplier",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"TechSupply Inc\",\n  \"contactEmail\": \"contact@techsupply.com\",\n  \"contactPhone\": \"+33123456789\",\n  \"contactName\": \"Pierre Dupont\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/suppliers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "suppliers"]
+						}
+					}
+				},
+				{
+					"name": "Get All Suppliers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/suppliers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "suppliers"]
+						}
+					}
+				},
+				{
+					"name": "Get Supplier By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/suppliers/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "suppliers", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Supplier",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"TechSupply Inc Updated\",\n  \"contactEmail\": \"newcontact@techsupply.com\",\n  \"contactPhone\": \"+33987654321\",\n  \"contactName\": \"Marie Martin\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/suppliers/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "suppliers", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Supplier",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/suppliers/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "suppliers", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Clients Management",
+			"item": [
+				{
+					"name": "Create Client",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"ACME Corporation\",\n  \"contactEmail\": \"orders@acme.com\",\n  \"contactPhone\": \"+33987654321\",\n  \"address\": \"123 Business Street, Paris\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/clients",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "clients"]
+						}
+					}
+				},
+				{
+					"name": "Get All Clients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/clients",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "clients"]
+						}
+					}
+				},
+				{
+					"name": "Get Client By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/clients/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "clients", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Client",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"ACME Corporation Updated\",\n  \"contactEmail\": \"newemail@acme.com\",\n  \"contactPhone\": \"+33111222333\",\n  \"address\": \"456 New Address, Lyon\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/clients/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "clients", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Client",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/clients/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "clients", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Purchase Orders",
+			"item": [
+				{
+					"name": "Create Purchase Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"supplierId\": 1,\n  \"expectedDeliveryDate\": \"2025-12-01T10:00:00\",\n  \"orderLines\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 50,\n      \"unitPrice\": 1200.00\n    },\n    {\n      \"productId\": 2,\n      \"quantity\": 30,\n      \"unitPrice\": 850.00\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/purchase-orders/create",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "purchase-orders", "create"]
+						}
+					}
+				},
+				{
+					"name": "Get All Purchase Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/purchase-orders/all",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "purchase-orders", "all"]
+						},
+						"description": "Get all purchase orders with their status and order lines"
+					}
+				},
+				{
+					"name": "Receive Items from PO Line",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"warehouseId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/purchase-orders/lines/1/receive",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "purchase-orders", "lines", "1", "receive"]
+						},
+						"description": "Receive all remaining items from a purchase order line into a warehouse. Only warehouseId is required - automatically receives all remaining quantity."
+					}
+				},
+				{
+					"name": "Cancel Purchase Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/purchase-orders/1/cancel",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "purchase-orders", "1", "cancel"]
+						},
+						"description": "Cancel a purchase order. Cannot cancel if status is already RECEIVED or CANCELED."
+					}
+				}
+			]
+		},
+		{
+			"name": "8. Sales Orders",
+			"item": [
+				{
+					"name": "Create Sales Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clientId\": 1,\n  \"warehouseId\": 1,\n  \"orderLines\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 5,\n      \"unitPrice\": 1299.99\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/sales-orders",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "sales-orders"]
+						}
+					}
+				},
+				{
+					"name": "Reserve Sales Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/sales-orders/1/reserve",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "sales-orders", "1", "reserve"]
+						},
+						"description": "Reserve stock for a sales order"
+					}
+				},
+				{
+					"name": "Ship Sales Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/sales-orders/1/ship",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "sales-orders", "1", "ship"]
+						},
+						"description": "Ship a reserved sales order"
+					}
+				}
+			]
+		},
+		{
+			"name": "9. Inventory Management",
+			"item": [
+				{
+					"name": "Handle Stock Movement",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": 1,\n  \"warehouseId\": 1,\n  \"quantity\": 10,\n  \"type\": \"INBOUND\",\n  \"referenceDocument\": \"MANUAL-ADJUSTMENT-001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/movements",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "movements"]
+						},
+						"description": "Types: INBOUND, OUTBOUND, ADJUSTMENT"
+					}
+				}
+			]
+		},
+		{
+			"name": "10. Test Scenarios",
+			"item": [
+				{
+					"name": "Product Deactivation Tests",
+					"item": [
+						{
+							"name": "Test 1 - Deactivate Product Successfully",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/products/PROD-ELE-123456/deactivate",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "products", "PROD-ELE-123456", "deactivate"]
+								},
+								"description": "Should succeed if:\n- No active orders (CREATED/RESERVED)\n- No reserved stock\n- Product is active"
+							}
+						},
+						{
+							"name": "Test 2 - Fail: Product Not Found",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/products/INVALID-SKU/deactivate",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "products", "INVALID-SKU", "deactivate"]
+								},
+								"description": "Expected: 404 NOT FOUND"
+							}
+						}
+					]
+				},
+				{
+					"name": "Warehouse Deletion Tests",
+					"item": [
+						{
+							"name": "Test 1 - Delete Warehouse Successfully",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/warehouses/1",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "warehouses", "1"]
+								},
+								"description": "Should succeed if:\n- No physical stock (qtyOnHand = 0)\n- No active orders (CREATED/RESERVED)\n\nExpected: 204 No Content"
+							}
+						},
+						{
+							"name": "Test 2 - Fail: Warehouse Not Found",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/warehouses/999",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "warehouses", "999"]
+								},
+								"description": "Expected: 404 NOT FOUND\nWarehouse not found with id: 999"
+							}
+						},
+						{
+							"name": "Test 3 - Fail: Warehouse Has Stock",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/warehouses/1",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "warehouses", "1"]
+								},
+								"description": "Expected: 409 CONFLICT\nCannot delete warehouse with id 1 because it contains N product(s) with physical stock\n\nPrerequisite: Warehouse must have inventory with qtyOnHand > 0"
+							}
+						},
+						{
+							"name": "Test 4 - Fail: Warehouse Has Active Orders",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/warehouses/1",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "warehouses", "1"]
+								},
+								"description": "Expected: 409 CONFLICT\nCannot delete warehouse with id 1 because it is associated with active sales orders (CREATED or RESERVED)\n\nPrerequisite: Warehouse must be linked to sales orders in CREATED or RESERVED status"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

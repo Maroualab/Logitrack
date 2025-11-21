@@ -14,7 +14,7 @@ import jakarta.persistence.*;
 )
 @Getter
 @Setter
-@NoArgsConstructor // Requis par JPA
+@NoArgsConstructor 
 public class Inventory {
 
     @Id

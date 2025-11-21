@@ -23,12 +23,15 @@ public abstract class UserMapper {
     public abstract UserResponseDTO toResponseDTO(User user);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "passwordHash", source = "password")
     @Mapping(target = "managedWarehouse", ignore = true)
     public abstract User toEntity(UserDTO userDTO);
 
     // Update existing User entity with DTO data (ignore nulls)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "managedWarehouse", ignore = true)
     public abstract void updateEntityFromDTO(UpdateUserDTO userDTO, @MappingTarget User user);
 
     @AfterMapping

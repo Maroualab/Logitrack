@@ -1,12 +1,14 @@
 package com.logitrack.logitrack.service;
 
 import com.logitrack.logitrack.dto.UpdateUserDTO;
+import com.logitrack.logitrack.exception.BusinessException;
+import com.logitrack.logitrack.exception.ResourceNotFoundException;
 import com.logitrack.logitrack.mapper.UserMapper;
 import com.logitrack.logitrack.model.User;
 import com.logitrack.logitrack.model.enums.UserRole;
 import com.logitrack.logitrack.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder; // <-- ADD THIS LINE
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,9 +42,16 @@ public class UserService {
     public User createUser(User user) {
         // Check if email already exists
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists: " + user.getEmail());
+            throw new BusinessException("Email already exists: " + user.getEmail());
         }
+        
+        // Encode password
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        
+        // Set default active status if not provided
+        if (user.getActive() == null) {
+            user.setActive(true);
+        }
 
         return userRepository.save(user);
     }
@@ -50,11 +59,9 @@ public class UserService {
     // Update user
     public User updateUser(Long id, UpdateUserDTO userDTO) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-    userMapper.updateEntityFromDTO(userDTO, existingUser);
-
-
+        userMapper.updateEntityFromDTO(userDTO, existingUser);
 
         return userRepository.save(existingUser);
     }
@@ -63,7 +70,7 @@ public class UserService {
     // Delete user
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         userRepository.delete(user);
     }
@@ -76,12 +83,16 @@ public class UserService {
     //login user
     public User loginUser(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
-
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            throw new RuntimeException("Invalid password for email: " + email);
+            throw new BusinessException("Invalid password");
         }
+        
+        if (!user.getActive()) {
+            throw new BusinessException("User account is inactive");
+        }
+        
         return user;
     }
 

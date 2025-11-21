@@ -3,6 +3,7 @@ package com.logitrack.logitrack.controller;
 import com.logitrack.logitrack.dto.UpdateUserDTO;
 import com.logitrack.logitrack.dto.UserDTO;
 import com.logitrack.logitrack.dto.UserResponseDTO;
+import com.logitrack.logitrack.exception.ResourceNotFoundException;
 import com.logitrack.logitrack.mapper.UserMapper;
 import com.logitrack.logitrack.model.User;
 import com.logitrack.logitrack.model.enums.UserRole;
@@ -43,14 +44,14 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         List<UserResponseDTO> userDTOs = users.stream()
                 .map(userMapper::toResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(userDTOs);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return ResponseEntity.ok(userMapper.toResponseDTO(user));
     }
 
@@ -70,34 +71,11 @@ public class UserController {
     }
 
 
-
-
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable String email) {
-        User user = userService.getUserByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
-        return ResponseEntity.ok(userMapper.toResponseDTO(user));
-    }
-
-    @GetMapping("/role/{role}")
-    public ResponseEntity<List<UserResponseDTO>> getUsersByRole(@PathVariable String role) {
-        try {
-            UserRole userRole = UserRole.valueOf(role.toUpperCase());
-            List<User> users = userService.getUsersByRole(userRole);
-            List<UserResponseDTO> userDTOs = users.stream()
-                    .map(userMapper::toResponseDTO)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(userDTOs);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid role: " + role);
-        }
-    }
+   
 }
